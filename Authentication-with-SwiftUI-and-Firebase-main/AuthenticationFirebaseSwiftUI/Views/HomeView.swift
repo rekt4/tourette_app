@@ -71,7 +71,7 @@ struct HomeView: View {
         
     }
     init () {
-//        welcomeTextViewModel.getData()
+
     }
     
     func signOutUser() {
