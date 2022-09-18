@@ -62,12 +62,6 @@ struct TicsListView: View {
                 self.viewModel.subscribe()
             }
             .onDisappear() {
-        // By unsubscribing from the view model, we prevent updates coming in from
-        // Firestore to be reflected in the UI. Since we do want to receive updates
-        // when the user is on any of the child screens, we keep the subscription active!
-        //
-        // print("TicsListView disappears. Unsubscribing from data updates.")
-        // self.viewModel.unsubscribe()
             }
             .sheet(isPresented: self.$presentAddTicSheet) {
                 TicEditView()
