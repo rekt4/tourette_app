@@ -14,11 +14,13 @@ struct Tic: Identifiable, Codable {
     var timeOfDay: String
     var type: String
     var intensity: Int
+    var userID: String
   
     enum CodingKeys: String, CodingKey {
         case dayOfWeek
         case timeOfDay
         case type
         case intensity
+        case userID
     }
 }

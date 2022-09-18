@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Firebase
 import FirebaseFirestore
 
 class TicsListViewModel: ObservableObject {
@@ -28,7 +29,7 @@ class TicsListViewModel: ObservableObject {
   
   func subscribe() {
     if listenerRegistration == nil {
-      listenerRegistration = db.collection("tics").addSnapshotListener { (querySnapshot, error) in
+        listenerRegistration = db.collection("tics").whereField("userID", isEqualTo: Auth.auth().currentUser!.uid).addSnapshotListener { (querySnapshot, error) in
         guard let documents = querySnapshot?.documents else {
           print("No documents")
           return
@@ -39,7 +40,8 @@ class TicsListViewModel: ObservableObject {
                        dayOfWeek: record["dayOfWeek"] as? String ?? "",
                        timeOfDay: record["timeOfDay"] as? String ?? "",
                        type: record["type"] as? String ?? "",
-                       intensity: record["intensity"] as? Int ?? 0)
+                       intensity: record["intensity"] as? Int ?? 0,
+                       userID: Auth.auth().currentUser!.uid)
         }
       }
     }

@@ -11,17 +11,18 @@ import Firebase
 struct HomeView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
-    
+    @ObservedObject var welcomeTextViewModel = HomeTextViewModel()
     @State var signOutProcessing = false
     @State var isNavigationLinkActive = true
+    
     
     var body: some View {
         VStack {
             NavigationView {
                 VStack {
-                    Text("Welcome to Tic Tracker! The purpose of this app is to help those with Tourette Syndrome and Tic Disorders. Being able to understand the pattern of one's tics leads to the possiblity of being able to manage and control them.").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
-                    Text("To begin, go to the **Data** tab. When the user has a tic attack, he/she will click on the 'plus' button on the top right of the page and input the requested information. Once completed, the user can see a representation of their data in the **Tic Tracker** tab.").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
-                    Text("For resources and important links regarding tics and Tourette's, proceed to the **Resources** tab. To briefly learn more about Tourette Syndrome, proceed to **Learn More**.").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
+                    Text(HomeTextViewModel.arr[0]).font(.system(Font.TextStyle.body, design: .rounded)).padding(20)
+                    Text(HomeTextViewModel.arr[1]).font(.system(Font.TextStyle.body, design: .rounded)).padding(20)
+                    Text(HomeTextViewModel.arr[2]).font(.system(Font.TextStyle.body, design: .rounded)).padding(20)
 
                     NavigationLink(destination: TicsListView()) {
                         Text("Data")
@@ -37,7 +38,7 @@ struct HomeView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
 
-                    NavigationLink(destination: ResourceView()) {
+                    NavigationLink(destination: ResourcesView()) {
                         Text("Resources")
                     }.frame(width: 250, height: 50, alignment: .center)
                     .background(Color.green)
@@ -63,11 +64,14 @@ struct HomeView: View {
                                     signOutUser()
                                 }
                             }
-                        }
+                        }   
                     }
             }
         }
         
+    }
+    init () {
+//        welcomeTextViewModel.getData()
     }
     
     func signOutUser() {
@@ -91,25 +95,6 @@ struct HomeView_Previews: PreviewProvider {
     }
 }
 
-struct ResourceView: View {
-    var body: some View {
-        VStack {
-            Text("**Resources**").font(.system(Font.TextStyle.title, design: .rounded)) .frame(width: 150, height: 30, alignment: .topLeading)
-            Form {
-                Link("Tourette Association of America",
-                    destination: URL(string: "https://tourette.org")!)
-
-                Link("Find a Local TAA Chapter",
-                    destination: URL(string: "https://tourette.org/resources/local-support/")!)
-                
-                Link("CDC Website on Tourette Syndrome",
-                     destination: URL(string: "https://www.cdc.gov/ncbddd/tourette/index.html")!)
-            }
-        }
-    }
-}
-
-
 
 struct TrackerView: View {
     
@@ -117,13 +102,9 @@ struct TrackerView: View {
     @State var pickerSelectedItem = 0
 
     var body: some View {
-        ZStack {
-            Color("Color").edgesIgnoringSafeArea(.all)
-            
+        NavigationView {
             VStack {
-                Text("Tic Tracker")
-                    .font(.system(size: 34))
-                    .fontWeight(.heavy)
+                Text("Welcome to **Tic Tracker**. Here, you can see a graphical representation of your tics as a distribution separated by day of the week. The tics are also distributed by time of day — selected between **Morning**, **Afternoon**, and **Evening**.").padding(24)
                 Picker(selection: $pickerSelectedItem, label: Text("")) {
                     Text("Morning").tag(0)
                     Text("Afternoon").tag(1)
@@ -131,17 +112,19 @@ struct TrackerView: View {
                 }.pickerStyle(SegmentedPickerStyle())
                     .padding(.horizontal, 24)
                 HStack {
-                    BarView(value: 10*model.arr[pickerSelectedItem][0], day: "S", height: 200)
-                    BarView(value: 10*model.arr[pickerSelectedItem][1], day: "M", height: 200)
-                    BarView(value: 10*model.arr[pickerSelectedItem][2], day: "T", height: 200)
-                    BarView(value: 10*model.arr[pickerSelectedItem][3], day: "W", height: 200)
-                    BarView(value: 10*model.arr[pickerSelectedItem][4], day: "Th", height: 200)
-                    BarView(value: 10*model.arr[pickerSelectedItem][5], day: "F", height: 200)
-                    BarView(value: 10*model.arr[pickerSelectedItem][6], day: "S", height: 200)
+                    BarView(value: 10 * model.arr[pickerSelectedItem][0], day: "S", height: 250)
+                    BarView(value: 10 * model.arr[pickerSelectedItem][1], day: "M", height: 250)
+                    BarView(value: 10 * model.arr[pickerSelectedItem][2], day: "T", height: 250)
+                    BarView(value: 10 * model.arr[pickerSelectedItem][3], day: "W", height: 250)
+                    BarView(value: 10 * model.arr[pickerSelectedItem][4], day: "Th", height: 250)
+                    BarView(value: 10 * model.arr[pickerSelectedItem][5], day: "F", height: 250)
+                    BarView(value: 10 * model.arr[pickerSelectedItem][6], day: "S", height: 250)
                 }.padding(.top, 24)
+                Spacer()
             }
-            
-        }
+            .navigationBarHidden(true)
+        }.navigationTitle("Tic Tracker")
+        
     }
     
     init () {
@@ -161,7 +144,7 @@ struct BarView: View {
                 Capsule().frame(width: 30, height: CGFloat(height))
                     .foregroundColor(.gray)
                 Capsule().frame(width: 30, height: CGFloat(value)) // change values here
-                    .foregroundColor(.white)
+                    .foregroundColor(.blue)
             }
             Text(day).padding(.top, 8)
         }
@@ -176,11 +159,20 @@ struct AttackView: View {
 
 struct AboutView: View{
     var body: some View {
-        VStack {
-            Text("**What are Tics?**").font(.system(Font.TextStyle.title, design: .rounded)) .frame(width: 200, height: 30, alignment: .topLeading)
-            Text("Tics are defined as sudden twitches, movements, or sounds that people do repeatedly. They can be classified as either vocal, or motor. As they sound, vocal tics have to do with someone making sounds with their voice, and motor tics are those which concern the movement of the body.").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
-            Text("Another important classification of tics is between simple ones and complex ones. Typically, simple tics involve only a few parts of the body, whereas complex tics involve a lot more and can have a pattern. In general, tics are thought to be unintentional, but can be suppressed by will in certain scenarios.").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
-            Spacer()
+        NavigationView {
+            ScrollView {
+                VStack {
+                    Text("**What are Tics?**").font(.system(Font.TextStyle.title, design: .rounded)) .frame(width: 200, height: 30, alignment: .topLeading) .padding(.top, 25)
+                    Text("Tics are defined as sudden twitches, movements, or sounds that people do repeatedly. They can be classified as either vocal, or motor. As they sound, vocal tics have to do with someone making sounds with their voice, and motor tics are those which concern the movement of the body. \n \n" + "Another important classification of tics is between simple ones and complex ones. Typically, simple tics involve only a few parts of the body, whereas complex tics involve a lot more and can have a pattern. In general, tics are thought to be unintentional, but can be suppressed by will in certain scenarios.").font(.system(size: 20, design: .rounded)).padding(50)
+                    Text("**Are there any cures?**").font(.system(Font.TextStyle.title, design: .rounded))
+                    Text("No, there are currently no direct cures for Tourette syndrome, however there are various methods to help those with Tourette’s control their tics. More information on this can be found on both the TAA and CDC website linked under “Resources”.").font(.system(size: 20, design: .rounded)).padding(50)
+                    Text("**Why was this app created?**").font(.system(Font.TextStyle.title, design: .rounded))
+                    Text("This app stemmed from my own tics. I originally created this app as a way to help myself deal with my tics. After being diagnosed with a chronic tic disorder at the end of elementary school, I struggled with my tics all throughout middle school, making my teachers angry and constantly disrupting class. \n \n" + "Among the numerous ways I tried to manage my tics, I found the most effective one being a tracker where I could understand when my tics would aggravate. A system where I could identify and visualize when my tics occurred was an important tool to help me manage my tics. By understanding this, I was able to figure out certain triggers that would lead to me doing certain tics. This app is meant to mimic that system for the user so that they can identify certain patterns and details to help manage their tics.").font(.system(size: 20, design: .rounded)).padding(50)
+                    Spacer()
+                }
+                .navigationBarHidden(true)
+            }
         }
+        .navigationBarTitle("Learn More")
     }
 }

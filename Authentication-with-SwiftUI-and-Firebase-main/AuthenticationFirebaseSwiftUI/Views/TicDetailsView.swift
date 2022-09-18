@@ -61,7 +61,7 @@ struct TicDetailsView: View {
 
 struct BookDetailsView_Previews: PreviewProvider {
   static var previews: some View {
-      let tic = Tic(dayOfWeek: "", timeOfDay: "", type: "", intensity: 0)
+      let tic = Tic(dayOfWeek: "", timeOfDay: "", type: "", intensity: 0, userID: "")
     return
       NavigationView {
         TicDetailsView(tic: tic)

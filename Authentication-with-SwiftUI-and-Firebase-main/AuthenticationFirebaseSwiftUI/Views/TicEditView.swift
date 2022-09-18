@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 enum Mode {
   case new
@@ -20,68 +21,73 @@ enum Action {
 }
 
 struct TicEditView: View {
-  // MARK: - State
-  
-  @Environment(\.presentationMode) private var presentationMode
-  @State var presentActionSheet = false
+    // MARK: - State
 
-  // MARK: - State (Initialiser-modifiable)
-  
-  @ObservedObject var viewModel = TicDetailsViewModel()
-  var mode: Mode = .new
-  var completionHandler: ((Result<Action, Error>) -> Void)?
-  
-  // MARK: - UI Components
-    
-  var cancelButton: some View {
-    Button(action: { self.handleCancelTapped() }) {
-      Text("Cancel")
-    }
-  }
-  
-  var saveButton: some View {
-    Button(action: { self.handleDoneTapped() }) {
-      Text(mode == .new ? "Done" : "Save")
-    }
-    .disabled(!viewModel.modified)
-  }
-  
-  var body: some View {
-    NavigationView {
-      Form {
-        Section(header: Text("Tic")) {
-          TextField("Title", text: $viewModel.tic.type)
-          TextField("Intensity of Tic", value: $viewModel.tic.intensity, formatter: NumberFormatter())
+    @Environment(\.presentationMode) private var presentationMode
+    @State var presentActionSheet = false
+
+    var intensities = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    // MARK: - State (Initialiser-modifiable)
+
+    @ObservedObject var viewModel = TicDetailsViewModel()
+    var mode: Mode = .new
+    var completionHandler: ((Result<Action, Error>) -> Void)?
+
+    // MARK: - UI Components
+
+    var cancelButton: some View {
+        Button(action: { self.handleCancelTapped() }) {
+          Text("Cancel")
         }
-        
-        Section(header: Text("When")) {
-            TextField("Time of Day", text: $viewModel.tic.timeOfDay)
-            TextField("Day of the Week", text: $viewModel.tic.dayOfWeek)
+    }
+
+    var saveButton: some View {
+        Button(action: { self.handleDoneTapped() }) {
+          Text(mode == .new ? "Done" : "Save")
         }
-        
-        if mode == .edit {
-          Section {
-            Button("Delete book") { self.presentActionSheet.toggle() }
-              .foregroundColor(.red)
+        .disabled(!viewModel.modified)
+    }
+
+    var body: some View {
+        NavigationView {
+          Form {
+            Text("Please fill out ALL of the fields listed below. Enter the **type of tic**, the **intensity of the tic**, the **day of the week**, and the **time of day** the tic occurred.").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
+            Section(header: Text("Tic")) {
+                TextField("Type of Tic (eg. Arm Jerk, Shoulder Shrug)", text: $viewModel.tic.type)
+                TextField("Intensity of Tic (1-10)", value: $viewModel.tic.intensity, formatter: NumberFormatter())
+            }
+            
+            Section(header: Text("When")) {
+                TextField("Time of Day (Morning, Afternoon, Evening)", text: $viewModel.tic.timeOfDay)
+                TextField("Day of the Week", text: $viewModel.tic.dayOfWeek)
+            }
+            
+            if mode == .edit {
+              Section {
+                Button("Delete tic") { self.presentActionSheet.toggle() }
+                  .foregroundColor(.red)
+              }
+            }
           }
+          .navigationTitle(mode == .new ? "New tic" : viewModel.tic.type)
+          .navigationBarTitleDisplayMode(mode == .new ? .inline : .large)
+          .navigationBarItems(
+            leading: cancelButton,
+            trailing: saveButton
+          )
+          .actionSheet(isPresented: $presentActionSheet) {
+            ActionSheet(title: Text("Are you sure?"),
+                        buttons: [
+                          .destructive(Text("Delete tic"),
+                                       action: { self.handleDeleteTapped() }),
+                          .cancel()
+                        ])
+          }
+            
         }
-      }
-      .navigationTitle(mode == .new ? "New tic" : viewModel.tic.type)
-      .navigationBarTitleDisplayMode(mode == .new ? .inline : .large)
-      .navigationBarItems(
-        leading: cancelButton,
-        trailing: saveButton
-      )
-      .actionSheet(isPresented: $presentActionSheet) {
-        ActionSheet(title: Text("Are you sure?"),
-                    buttons: [
-                      .destructive(Text("Delete tic"),
-                                   action: { self.handleDeleteTapped() }),
-                      .cancel()
-                    ])
-      }
+        
     }
-  }
   
   // MARK: - Action Handlers
   
@@ -106,9 +112,8 @@ struct TicEditView: View {
 }
 
 struct TicEditView_Previews: PreviewProvider {
-  static var previews: some View {
-    let tic = Tic(dayOfWeek: "", timeOfDay: "", type: "", intensity: 0)
-    let ticViewModel = TicDetailsViewModel(tic: tic)
-    return TicEditView(viewModel: ticViewModel, mode: .edit)
-  }
+    static var previews: some View {
+        let ticViewModel = TicDetailsViewModel(tic: Tic(dayOfWeek: "", timeOfDay: "", type: "", intensity: 0, userID: (Auth.auth().currentUser?.uid)!))
+        return TicEditView(viewModel: ticViewModel, mode: .edit)
+    }
 }

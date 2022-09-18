@@ -11,6 +11,7 @@ import Firebase
 struct SignInView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
+    @ObservedObject var welcomeTextViewModel = HomeTextViewModel()
     
     @State var email = ""
     @State var password = ""
@@ -52,6 +53,9 @@ struct SignInView: View {
                 .opacity(0.9)
         }
             .padding()
+    }
+    init () {
+        welcomeTextViewModel.getData()
     }
     
     func signInUser(userEmail: String, userPassword: String) {

@@ -1,5 +1,5 @@
 //
-//  BarViewModel.swift
+//  TicGraphViewModel.swift
 //  AuthenticationFirebaseSwiftUI
 //
 //  Created by Nikhil M on 7/19/22.
@@ -42,13 +42,16 @@ class TicGraphViewModel: ObservableObject {
                 if let snapshot = snapshot {
                     DispatchQueue.main.async {
                         for doc in snapshot.documents {
-                            let timeOfDay = doc["timeOfDay"] as! String
-                            let dayOfWeek = doc["dayOfWeek"] as! String
-                            
-                            let timeOfDayId:Int = TimeLookup[timeOfDay.lowercased()]!
-                            let dayOfWeekId:Int = DayLookup[dayOfWeek.lowercased()]!
-                            
-                            self.arr[timeOfDayId][dayOfWeekId] += 1;
+                            let uid = doc["userID"] as? String ?? ""
+                            if (uid == Auth.auth().currentUser?.uid) {
+                                let timeOfDay = doc["timeOfDay"] as! String
+                                let dayOfWeek = doc["dayOfWeek"] as! String
+                                
+                                let timeOfDayId:Int = TimeLookup[timeOfDay.lowercased()]!
+                                let dayOfWeekId:Int = DayLookup[dayOfWeek.lowercased()]!
+                                
+                                self.arr[timeOfDayId][dayOfWeekId] += 1;
+                            }
                         }
                     }
                 }

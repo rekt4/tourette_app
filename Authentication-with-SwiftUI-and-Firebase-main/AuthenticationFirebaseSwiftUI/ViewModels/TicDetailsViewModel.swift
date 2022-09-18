@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Firebase
 import FirebaseFirestore
 
 class TicDetailsViewModel: ObservableObject {
@@ -14,6 +15,7 @@ class TicDetailsViewModel: ObservableObject {
   
   @Published var tic: Tic
   @Published var modified = false
+  let userID = Auth.auth().currentUser!.uid
   
   // MARK: - Internal properties
   
@@ -21,7 +23,7 @@ class TicDetailsViewModel: ObservableObject {
   
   // MARK: - Constructors
   
-    init(tic: Tic = Tic(dayOfWeek: "", timeOfDay: "", type: "", intensity: 0)) {
+    init(tic: Tic = Tic(dayOfWeek: "", timeOfDay: "", type: "", intensity: 0, userID: Auth.auth().currentUser!.uid)) {
     self.tic = tic
     
     self.$tic
@@ -38,7 +40,7 @@ class TicDetailsViewModel: ObservableObject {
   
   private func addTic(_ tic: Tic) {
     do {
-      let _ = try db.collection("tics").addDocument(from: tic)
+        let _ = try db.collection("tics").addDocument(from: tic)
     }
     catch {
       print(error)
@@ -67,7 +69,7 @@ class TicDetailsViewModel: ObservableObject {
   
   private func removeTic() {
     if let documentId = tic.id {
-      db.collection("tics").document(documentId).delete { error in
+        db.collection("tics").document(documentId).delete { error in
         if let error = error {
           print(error.localizedDescription)
         }

@@ -28,47 +28,50 @@ struct TicsListView: View {
     }
 
     private func ticRowView(tic: Tic) -> some View {
-//        NavigationLink(destination: TicDetailsView(tic: tic), isActive: $isNavigationLinkActive) {
-//            VStack(alignment: .leading) {
-//                Text(tic.type)
-//                    .font(.headline)
-//                Text(tic.dayOfWeek)
-//                    .font(.subheadline)
-//                Text(tic.timeOfDay)
-//                    .font(.subheadline)
-//                Text("Intensity: \(tic.intensity)")
-//                    .font(.subheadline)
-//            }
-//        }
-//        .navigationBarTitle(Text("Tics"))
-        Text(tic.type)
+        NavigationLink(destination: TicDetailsView(tic: tic), isActive: $isNavigationLinkActive) {
+            VStack(alignment: .leading) {
+                Text(tic.type.uppercased())
+                    .font(.headline)
+                Text(tic.dayOfWeek.uppercased())
+                    .font(.subheadline)
+                Text(tic.timeOfDay.uppercased())
+                    .font(.subheadline)
+                Text("Intensity: \(tic.intensity)")
+                    .font(.subheadline)
+            }
+        }
+        .navigationBarTitle(Text("Tics"))
     }
         
     var body: some View {
-        List {
-            ForEach (viewModel.tics) { tic in
-                ticRowView(tic: tic)
+        let ticList = viewModel.tics.compactMap { $0 }
+        VStack {
+            Text("Click the 'plus' icon on the upper right hand corner of your screen to add a tic!").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
+            List {
+                ForEach (ticList) { tic in
+                    ticRowView(tic: tic)
+                }
+                .onDelete() { indexSet in
+                    viewModel.removeTics(atOffsets: indexSet)
+                }
             }
-            .onDelete() { indexSet in
-                viewModel.removeTics(atOffsets: indexSet)
+            .navigationBarTitle("Tics")
+            .navigationBarItems(trailing: addButton)
+            .onAppear() {
+                print("TicsListView appears. Subscribing to data updates.")
+                self.viewModel.subscribe()
             }
-        }
-        .navigationBarTitle("Tics")
-        .navigationBarItems(trailing: addButton)
-        .onAppear() {
-            print("TicsListView appears. Subscribing to data updates.")
-            self.viewModel.subscribe()
-        }
-        .onDisappear() {
-    // By unsubscribing from the view model, we prevent updates coming in from
-    // Firestore to be reflected in the UI. Since we do want to receive updates
-    // when the user is on any of the child screens, we keep the subscription active!
-    //
-    // print("TicsListView disappears. Unsubscribing from data updates.")
-    // self.viewModel.unsubscribe()
-        }
-        .sheet(isPresented: self.$presentAddTicSheet) {
-            TicEditView()
+            .onDisappear() {
+        // By unsubscribing from the view model, we prevent updates coming in from
+        // Firestore to be reflected in the UI. Since we do want to receive updates
+        // when the user is on any of the child screens, we keep the subscription active!
+        //
+        // print("TicsListView disappears. Unsubscribing from data updates.")
+        // self.viewModel.unsubscribe()
+            }
+            .sheet(isPresented: self.$presentAddTicSheet) {
+                TicEditView()
+            }
         }
     }
 }
