@@ -21,33 +21,31 @@ struct HomeView: View {
             NavigationView {
                 VStack {
                     Text(HomeTextViewModel.arr[0]).font(.system(Font.TextStyle.body, design: .rounded)).padding(20)
-                    Text(HomeTextViewModel.arr[1]).font(.system(Font.TextStyle.body, design: .rounded)).padding(20)
-                    Text(HomeTextViewModel.arr[2]).font(.system(Font.TextStyle.body, design: .rounded)).padding(20)
 
                     NavigationLink(destination: TicsListView()) {
-                        Text("Data")
-                    }.frame(width: 250, height: 50, alignment: .center)
+                        Text("My Tic Records")
+                    }.frame(width: 360, height: 75, alignment: .center)
                     .background(Color.red)
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     
                     NavigationLink(destination: TrackerView()) {
-                        Text("Tic Tracker")
-                    }.frame(width: 250, height: 50, alignment: .center)
+                        Text("My Tic Graph")
+                    }.frame(width: 360, height: 75, alignment: .center)
                     .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(8)
 
                     NavigationLink(destination: ResourcesView()) {
                         Text("Resources")
-                    }.frame(width: 250, height: 50, alignment: .center)
+                    }.frame(width: 360, height: 75, alignment: .center)
                     .background(Color.green)
                     .foregroundColor(.white)
                     .cornerRadius(8)
 
                     NavigationLink(destination: AboutView()) {
                         Text("Learn More")
-                    }.frame(width: 250, height: 50, alignment: .center)
+                    }.frame(width: 360, height: 75, alignment: .center)
                     .background(Color.orange)
                     .foregroundColor(.white)
                     .cornerRadius(8)
@@ -104,7 +102,7 @@ struct TrackerView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Welcome to **Tic Tracker**. Here, you can see a graphical representation of your tics as a distribution separated by day of the week. The tics are also distributed by time of day — selected between **Morning**, **Afternoon**, and **Evening**.").padding(24)
+                Text("Welcome to **My Tic Graph**. Use this graph to understand when your tics are the most active.").padding(24)
                 Picker(selection: $pickerSelectedItem, label: Text("")) {
                     Text("Morning").tag(0)
                     Text("Afternoon").tag(1)
@@ -123,7 +121,7 @@ struct TrackerView: View {
                 Spacer()
             }
             .navigationBarHidden(true)
-        }.navigationTitle("Tic Tracker")
+        }.navigationTitle("My Tic Graph")
         
     }
     
@@ -151,23 +149,19 @@ struct BarView: View {
     }
 }
 
-struct AttackView: View {
-    var body: some View {
-        Text("attack view")
-    }
-}
-
 struct AboutView: View{
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack {
+                    Text("**How do I use this app?**").font(.system(Font.TextStyle.title, design: .rounded)) .frame(width: 280, height: 30, alignment: .topLeading) .padding(.top, 25)
+                    Text("To record a tic attack, go to “My Tic Records” and click on the '+' button on the top right of the page. Add the requested information. Once added, you can see a representation of the data in the “My Tic Graph” tab. You can find more information about Tourette's and tics under “Resources”.").font(.system(size: 20, design: .rounded)).padding(50)
                     Text("**What are Tics?**").font(.system(Font.TextStyle.title, design: .rounded)) .frame(width: 200, height: 30, alignment: .topLeading) .padding(.top, 25)
-                    Text("Tics are defined as sudden twitches, movements, or sounds that people do repeatedly. They can be classified as either vocal, or motor. As they sound, vocal tics have to do with someone making sounds with their voice, and motor tics are those which concern the movement of the body. \n \n" + "Another important classification of tics is between simple ones and complex ones. Typically, simple tics involve only a few parts of the body, whereas complex tics involve a lot more and can have a pattern. In general, tics are thought to be unintentional, but can be suppressed by will in certain scenarios.").font(.system(size: 20, design: .rounded)).padding(50)
+                    Text("Tics are sudden twitches, movements, or sounds that happen repeatedly. They are classified between vocal and motor tics or simple and complex tics. Vocal tics include someone making repeated sounds, while motor tics involve uncontrolled body movement. \n \n" + "Typically, simple tics involve only a few body parts, whereas complex tics involve a lot more and can have a pattern. Tics are unintentional and uncontrollable but can be suppressed by will in some scenarios.").font(.system(size: 20, design: .rounded)).padding(50)
                     Text("**Are there any cures?**").font(.system(Font.TextStyle.title, design: .rounded))
-                    Text("No, there are currently no direct cures for Tourette syndrome, however there are various methods to help those with Tourette’s control their tics. More information on this can be found on both the TAA and CDC website linked under “Resources”.").font(.system(size: 20, design: .rounded)).padding(50)
+                    Text("No, there are currently no cures for Tourette syndrome. However, there are methods to help those with Tourette syndrome manage their tics. You can find more information on the TAA and CDC websites (under “Resources”).").font(.system(size: 20, design: .rounded)).padding(50)
                     Text("**Why was this app created?**").font(.system(Font.TextStyle.title, design: .rounded))
-                    Text("This app stemmed from my own tics. I originally created this app as a way to help myself deal with my tics. After being diagnosed with a chronic tic disorder at the end of elementary school, I struggled with my tics all throughout middle school, making my teachers angry and constantly disrupting class. \n \n" + "Among the numerous ways I tried to manage my tics, I found the most effective one being a tracker where I could understand when my tics would aggravate. A system where I could identify and visualize when my tics occurred was an important tool to help me manage my tics. By understanding this, I was able to figure out certain triggers that would lead to me doing certain tics. This app is meant to mimic that system for the user so that they can identify certain patterns and details to help manage their tics.").font(.system(size: 20, design: .rounded)).padding(50)
+                    Text("This app stemmed from my tics. I created this app to help myself deal with my tics. After being diagnosed with a chronic tic disorder at the end of elementary school, I struggled with my tics throughout middle school, making my teachers angry and constantly disrupting class. \n \n" + "Among the numerous ways I tried to manage my tics, the most effective one was a tracker where I could understand when my tics would aggravate. A system where I could identify and visualize when my tics occurred was critical in helping me manage my tics. By understanding this, I figured out triggers that would lead to me doing certain tics. This app is meant to mimic that system for the user so that they can identify patterns and details to help manage their tics.").font(.system(size: 20, design: .rounded)).padding(50)
                     Spacer()
                 }
                 .navigationBarHidden(true)

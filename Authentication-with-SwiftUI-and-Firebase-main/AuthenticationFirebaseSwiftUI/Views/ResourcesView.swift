@@ -14,9 +14,9 @@ struct ResourcesView: View {
         let resourceList = resourceViewModel.resources.compactMap { $0 }
         
         VStack {
+            Text("Here are a few resources that are helpful to understand Tourette syndrome.").padding(24)
             List {
                 ForEach (resourceList) { resource in
-//                    Text(resource.name)
                     Link(resource.name, destination: URL(string: resource.link)!)
                 }
             }
