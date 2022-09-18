@@ -46,7 +46,7 @@ struct TicsListView: View {
     var body: some View {
         let ticList = viewModel.tics.compactMap { $0 }
         VStack {
-            Text("Click the 'plus' icon on the upper right hand corner of your screen to add a tic!").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
+            Text("Click the '+' icon on the upper right hand corner of your screen to add a tic!").font(.system(Font.TextStyle.body, design: .rounded)).padding(10)
             List {
                 ForEach (ticList) { tic in
                     ticRowView(tic: tic)
