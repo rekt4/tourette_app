@@ -154,7 +154,7 @@ struct AboutView: View{
         NavigationView {
             ScrollView {
                 VStack {
-                    Text("**How do I use this app?**").font(.system(Font.TextStyle.title, design: .rounded)) .frame(width: 280, height: 30, alignment: .topLeading) .padding(.top, 25)
+                    Text("**How do I use this app?**").font(.system(Font.TextStyle.title, design: .rounded)) .frame(width: 330, height: 30, alignment: .topLeading) .padding(.top, 25)
                     Text("To record a tic attack, go to “My Tic Records” and click on the '+' button on the top right of the page. Add the requested information. Once added, you can see a representation of the data in the “My Tic Graph” tab. You can find more information about Tourette's and tics under “Resources”.").font(.system(size: 20, design: .rounded)).padding(50)
                     Text("**What are Tics?**").font(.system(Font.TextStyle.title, design: .rounded)) .frame(width: 200, height: 30, alignment: .topLeading) .padding(.top, 25)
                     Text("Tics are sudden twitches, movements, or sounds that happen repeatedly. They are classified between vocal and motor tics or simple and complex tics. Vocal tics include someone making repeated sounds, while motor tics involve uncontrolled body movement. \n \n" + "Typically, simple tics involve only a few body parts, whereas complex tics involve a lot more and can have a pattern. Tics are unintentional and uncontrollable but can be suppressed by will in some scenarios.").font(.system(size: 20, design: .rounded)).padding(50)
